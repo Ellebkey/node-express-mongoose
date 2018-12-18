@@ -1,22 +1,33 @@
 const User = require('../models/user.model');
+const logger = require('../../config/winston');
+
+const controller = {};
 
 /**
  * Load user and append to req.
  */
-function load(req, res, next, id) {
-  User.get(id)
-    .then((user) => {
-      req.user = user; // eslint-disable-line no-param-reassign
-      return next();
-    })
-    .catch(e => next(e));
+controller.getById = async(req, res, next, id) =>{
+  try {
+    const user = await User.get(id);
+    logger.info('getting user ' + id);
+    if (!user) {
+      const e = new Error('User does not exist');
+      e.status = httpStatus.NOT_FOUND;
+      return next(e);
+    }
+    req.user = user;
+    return next();
+  } catch (err) {
+    logger.error('Error in getting user', err);
+    return next(err);
+  }
 }
 
 /**
  * Get user
  * @returns {User}
  */
-function get(req, res) {
+controller.get = (req, res) => {
   return res.json(req.user);
 }
 
@@ -26,7 +37,7 @@ function get(req, res) {
  * @property {string} req.body.mobileNumber - The mobileNumber of user.
  * @returns {User}
  */
-function create(req, res, next) {
+controller.create = (req, res, next) => {
   const user = new User({
     username: req.body.username,
     mobileNumber: req.body.mobileNumber
@@ -43,7 +54,7 @@ function create(req, res, next) {
  * @property {string} req.body.mobileNumber - The mobileNumber of user.
  * @returns {User}
  */
-function update(req, res, next) {
+controller.update = (req, res, next) => {
   const user = req.user;
   user.username = req.body.username;
   user.mobileNumber = req.body.mobileNumber;
@@ -59,7 +70,9 @@ function update(req, res, next) {
  * @property {number} req.query.limit - Limit number of users to be returned.
  * @returns {User[]}
  */
-function list(req, res, next) {
+controller.list = (req, res, next) => {
+  logger.error('sending all users...');
+
   const { limit = 50, skip = 0 } = req.query;
   User.list({ limit, skip })
     .then(users => res.json(users))
@@ -70,11 +83,11 @@ function list(req, res, next) {
  * Delete user.
  * @returns {User}
  */
-function remove(req, res, next) {
+controller.remove = (req, res, next) => {
   const user = req.user;
   user.remove()
     .then(deletedUser => res.json(deletedUser))
     .catch(e => next(e));
 }
 
-module.exports = { load, get, create, update, list, remove };
+module.exports = controller;
