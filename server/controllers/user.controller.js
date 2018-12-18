@@ -27,7 +27,7 @@ controller.getById = async(req, res, next, id) =>{
  * Get user
  * @returns {User}
  */
-controller.get = (req, res) => {
+controller.read = (req, res) => {
   return res.json(req.user);
 }
 
@@ -37,15 +37,15 @@ controller.get = (req, res) => {
  * @property {string} req.body.mobileNumber - The mobileNumber of user.
  * @returns {User}
  */
-controller.create = (req, res, next) => {
-  const user = new User({
-    username: req.body.username,
-    mobileNumber: req.body.mobileNumber
-  });
-
-  user.save()
-    .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
+controller.create = async(req, res, next) => {
+  const user = new User( req.body);
+  try {
+    const savedUser = await user.save();
+    res.json(savedUser)
+  } catch (err) {
+    logger.error('Error in getting user', err);
+    return err; 
+  }
 }
 
 /**
@@ -54,14 +54,21 @@ controller.create = (req, res, next) => {
  * @property {string} req.body.mobileNumber - The mobileNumber of user.
  * @returns {User}
  */
-controller.update = (req, res, next) => {
-  const user = req.user;
-  user.username = req.body.username;
-  user.mobileNumber = req.body.mobileNumber;
+controller.update = async(req, res, next) => {
+  let user = req.user;
+  let a = req.body;
+  let updateUser = {...user, a};
 
-  user.save()
-    .then(savedUser => res.json(savedUser))
-    .catch(e => next(e));
+  console.log(updateUser, '\n\n\n');
+  console.log(user);
+
+  try {
+    const savedUser = await updateUser.save();
+    res.json(savedUser)
+  } catch (err) {
+    logger.error('Error updating the user', err);
+    return err; 
+  }
 }
 
 /**
@@ -70,13 +77,17 @@ controller.update = (req, res, next) => {
  * @property {number} req.query.limit - Limit number of users to be returned.
  * @returns {User[]}
  */
-controller.list = (req, res, next) => {
-  logger.error('sending all users...');
-
+controller.list = async(req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
-  User.list({ limit, skip })
-    .then(users => res.json(users))
-    .catch(e => next(e));
+ 
+  try {
+    const users = await User.list({ limit, skip })
+    logger.info('getting users list');
+    return res.json(users);
+  } catch (err) {
+    logger.error('Error in getting users', err);
+    return next(err);
+  }
 }
 
 /**

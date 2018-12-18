@@ -14,7 +14,7 @@ router.route('/')
 
 router.route('/:userId')
   /** GET /api/users/:userId - Get user */
-  .get(userCtrl.get)
+  .get(userCtrl.read)
 
   /** PUT /api/users/:userId - Update user */
   .put(validate(paramValidation.updateUser), userCtrl.update)

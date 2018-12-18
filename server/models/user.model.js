@@ -22,13 +22,6 @@ const UserSchema = new mongoose.Schema({
 });
 
 /**
- * Add your
- * - pre-save hooks
- * - validations
- * - virtuals
- */
-
-/**
  * Methods
  */
 UserSchema.method({
