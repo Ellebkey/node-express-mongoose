@@ -36,8 +36,10 @@
     "mocha": true
   },
   "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module"
+    "ecmaVersion": 8,
+    "ecmaFeatures": {
+      "globalReturn": true
+    }
   },
   "extends": [
     "eslint:recommended",
