@@ -10,12 +10,18 @@ controller.getById = async (req, res, next, id) => {
   try {
     const user = await User.get(id);
     logger.info(`getting user  ${id}`);
+
+    if (!user) {
+      return res.status(400).send({
+        message: `User with id: ${id}, was not found`
+      });
+    }
     req.user = user;
     return next();
   } catch (err) {
-    logger.error(`Error in getting user ${err}`);
+    logger.error(err);
     return res.status(400).send({
-      message: err
+      message: 'An unexpected error occurred'
     });
   }
 };

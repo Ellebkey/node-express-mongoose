@@ -7,6 +7,7 @@
         "SwitchCase": 1
       }
     ],
+    "no-console": ["error", { "allow": ["info"] }],
     "space-before-function-paren": [
       2,
       {
