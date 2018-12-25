@@ -1,13 +1,12 @@
 const jwt = require('jsonwebtoken');
-const httpStatus = require('http-status');
-const APIError = require('../helpers/APIError');
+const bcrypt = require('bcrypt');
+// const httpStatus = require('http-status');
+const User = require('../models/user.model');
+// const APIError = require('../helpers/APIError');
 const config = require('../../config/config');
+const logger = require('../../config/winston');
 
-// sample user, used for authentication
-const user = {
-  username: 'user',
-  password: 'pass'
-};
+const controller = {};
 
 /**
  * Returns jwt token if valid username and password is provided
@@ -16,22 +15,35 @@ const user = {
  * @param next
  * @returns {*}
  */
-function login(req, res, next) {
-  // Ideally you'll fetch this from the db
-  // Idea here was to show how jwt works with simplicity
-  if (req.body.username === user.username && req.body.password === user.password) {
+controller.login = async (req, res) => {
+  try {
+    const user = await User.getByUsername(req.body.username);
+    const validPassword = await bcrypt.compare(req.body.password, user.hashedPassword);
+
+    if (!validPassword) {
+      return res.status(401).send({
+        message: 'Contraseña invalida'
+      });
+    }
     const token = jwt.sign({
       username: user.username
     }, config.jwtSecret);
+
     return res.json({
       token,
       username: user.username
     });
+  } catch (err) {
+    logger.error(err);
+    return res.status(400).send({
+      message: 'An unexpected error occurred'
+    });
   }
+};
 
-  const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
-  return next(err);
-}
+//  const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
+//  return next(err);
+
 
 /**
  * This is a protected route. Will return random number only if jwt token is provided in header.
@@ -39,12 +51,13 @@ function login(req, res, next) {
  * @param res
  * @returns {*}
  */
-function getRandomNumber(req, res) {
+controller.getRandomNumber = (req, res) => {
   // req.user is assigned by jwt middleware if valid token is provided
+  logger.info('getting ramdom number');
   return res.json({
     user: req.user,
     num: Math.random() * 100
   });
-}
+};
 
-module.exports = { login, getRandomNumber };
+module.exports = controller;

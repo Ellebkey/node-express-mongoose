@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
 const logger = require('../../config/winston');
 
@@ -39,13 +40,19 @@ controller.read = (req, res) => res.json(req.user);
  * @returns {User}
  */
 controller.create = async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  logger.info(hashedPassword);
   const user = new User(req.body);
+  user.hashedPassword = hashedPassword;
+
   try {
     const savedUser = await user.save();
     return res.json(savedUser);
   } catch (err) {
     logger.error(`Error in getting user ${err}`);
-    return err;
+    return res.status(400).send({
+      message: `An unexpected error occurred: ${err}`
+    });
   }
 };
 
@@ -66,7 +73,9 @@ controller.update = async (req, res) => {
     return res.json(savedUser);
   } catch (err) {
     logger.error(`Error updating user ${err}`);
-    return err;
+    return res.status(400).send({
+      message: `An unexpected error occurred: ${err}`
+    });
   }
 };
 

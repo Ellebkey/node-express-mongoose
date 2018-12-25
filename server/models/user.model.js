@@ -10,6 +10,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  hashedPassword: {
+    type: String,
+    required: true
+  },
   mobileNumber: {
     type: String,
     required: true,
@@ -41,6 +45,10 @@ UserSchema.statics = {
       .exec();
   },
 
+  getByUsername(username) {
+    return this.findOne({ username });
+  },
+
   /**
    * List users in descending order of 'createdAt' timestamp.
    * @param {number} skip - Number of users to be skipped.
@@ -52,6 +60,7 @@ UserSchema.statics = {
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
+      .lean()
       .exec();
   }
 };
