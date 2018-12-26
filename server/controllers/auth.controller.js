@@ -44,6 +44,30 @@ controller.login = async (req, res) => {
 //  const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
 //  return next(err);
 
+controller.signup = async (req, res) => {
+  const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  logger.info(hashedPassword);
+  const user = new User(req.body);
+  user.hashedPassword = hashedPassword;
+
+  try {
+    await user.save();
+
+    const token = jwt.sign({
+      username: user.username
+    }, config.jwtSecret);
+
+    return res.json({
+      token,
+      username: user.username
+    });
+  } catch (err) {
+    logger.error(`Error in getting user ${err}`);
+    return res.status(400).send({
+      message: `An unexpected error occurred: ${err}`
+    });
+  }
+};
 
 /**
  * This is a protected route. Will return random number only if jwt token is provided in header.
