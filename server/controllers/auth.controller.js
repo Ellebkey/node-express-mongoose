@@ -26,16 +26,18 @@ controller.login = async (req, res) => {
       });
     }
     const token = jwt.sign({
-      username: user.username
+      username: user.username,
+      roles: user.roles,
     }, config.jwtSecret);
 
     return res.json({
       token,
+      roles: user.roles,
       username: user.username
     });
   } catch (err) {
     logger.error(err);
-    return res.status(400).send({
+    return res.status(500).send({
       message: 'An unexpected error occurred'
     });
   }
@@ -59,11 +61,12 @@ controller.signup = async (req, res) => {
 
     return res.json({
       token,
+      roles: user.roles,
       username: user.username
     });
   } catch (err) {
     logger.error(`Error in getting user ${err}`);
-    return res.status(400).send({
+    return res.status(500).send({
       message: `An unexpected error occurred: ${err}`
     });
   }

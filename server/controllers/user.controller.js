@@ -21,7 +21,7 @@ controller.getById = async (req, res, next, id) => {
     return next();
   } catch (err) {
     logger.error(err);
-    return res.status(400).send({
+    return res.status(500).send({
       message: 'An unexpected error occurred'
     });
   }
@@ -50,7 +50,7 @@ controller.create = async (req, res) => {
     return res.json(savedUser);
   } catch (err) {
     logger.error(`Error in getting user ${err}`);
-    return res.status(400).send({
+    return res.status(500).send({
       message: `An unexpected error occurred: ${err}`
     });
   }
@@ -73,7 +73,7 @@ controller.update = async (req, res) => {
     return res.json(savedUser);
   } catch (err) {
     logger.error(`Error updating user ${err}`);
-    return res.status(400).send({
+    return res.status(500).send({
       message: `An unexpected error occurred: ${err}`
     });
   }

@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken');
 const config = require('./config.js');
 
-module.exports = function(req, res, next) {
+/**
+ * Middleware to validate user token
+ */
+module.exports = (req, res, next) => {
   if( typeof req.headers.authorization !== "undefined" ) {
     try {
       req.user = jwt.verify(req.headers.authorization, config.jwtSecret);
@@ -14,7 +17,7 @@ module.exports = function(req, res, next) {
       });
     }
   } else {
-    return res.status(401).json({
+    return res.status(403).json({
       error: {
         msg: 'User is not logged, you need a token!'
       }

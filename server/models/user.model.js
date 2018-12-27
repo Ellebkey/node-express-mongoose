@@ -8,17 +8,25 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
+    unique: true,
     required: true
   },
   hashedPassword: {
     type: String,
     required: true
   },
-  mobileNumber: {
+  email: {
     type: String,
     required: true,
+    unique: true
+  },
+  mobileNumber: {
+    type: String,
     match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
   },
+  roles: [{
+    type: String,
+  }],
   createdAt: {
     type: Date,
     default: Date.now

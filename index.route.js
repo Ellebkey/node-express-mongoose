@@ -1,6 +1,8 @@
 const express = require('express');
+const policies = require('./server/policies/user.policies').invokeRolesPolicies();
 const userRoutes = require('./server/routes/user.route');
 const authRoutes = require('./server/routes/auth.route');
+
 
 const router = express.Router(); // eslint-disable-line new-cap
 
