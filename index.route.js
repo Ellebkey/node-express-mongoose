@@ -1,22 +1,27 @@
 const express = require('express');
-const policies = require('./server/policies/user.policies').invokeRolesPolicies();
-const userRoutes = require('./server/routes/user.route');
-const authRoutes = require('./server/routes/auth.route');
-
+const path = require('path');
+const glob = require('glob');
+const logger = require('./config/winston');
 
 const router = express.Router(); // eslint-disable-line new-cap
-
-// TODO: use glob to match *.route files
 
 /** GET /health-check - Check service health */
 router.get('/health-check', (req, res) => {
   res.send('OK');
 });
 
-// mount user routes at /users
-router.use('/users', userRoutes);
+/** Configure the modules ACL policies */
+logger.info('Initializing Modules Server Policies...');
+for (const file of glob.sync( './server/policies/*.js' )) {
+  require( path.resolve( file ) ).invokeRolesPolicies();
+}
 
-// mount auth routes at /auth
-router.use('/auth', authRoutes);
+/** Configure the modules server routes */
+logger.info('Initializing Modules Server Routes...');
+for (const file of glob.sync( './server/routes/*.js' )) {
+  router.use('/users', require( path.resolve( file ) ));
+}
+
+
 
 module.exports = router;
