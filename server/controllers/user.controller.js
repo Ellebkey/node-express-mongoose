@@ -14,7 +14,8 @@ controller.getById = async (req, res, next, id) => {
 
     if (!user) {
       return res.status(400).send({
-        message: `User with id: ${id}, was not found`
+        message: `User with id: ${id}, was not found`,
+        error: user
       });
     }
     req.user = user;
@@ -22,7 +23,8 @@ controller.getById = async (req, res, next, id) => {
   } catch (err) {
     logger.error(err);
     return res.status(500).send({
-      message: 'An unexpected error occurred'
+      message: 'An unexpected error occurred',
+      error: err
     });
   }
 };
@@ -40,6 +42,14 @@ controller.read = (req, res) => res.json(req.user);
  * @returns {User}
  */
 controller.create = async (req, res) => {
+  if (!req.body.password) {
+    return res.status(500).send({
+      message: 'An unexpected error occurred',
+      error: 'Not password',
+      code: 500
+    });
+  }
+
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   logger.info(hashedPassword);
   const user = new User(req.body);
@@ -51,7 +61,9 @@ controller.create = async (req, res) => {
   } catch (err) {
     logger.error(`Error in getting user ${err}`);
     return res.status(500).send({
-      message: `An unexpected error occurred: ${err}`
+      message: `An unexpected error occurred: ${err}`,
+      error: err,
+      code: 500
     });
   }
 };

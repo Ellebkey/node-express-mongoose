@@ -12,14 +12,17 @@ module.exports = (req, res, next) => {
     } catch(err) {
       return res.status(401).json({
         error: {
-          msg: 'Failed to authenticate token!'
+          message: 'Failed to authenticate token!',
+          error: err,
+          code: 401
         }
       });
     }
   } else {
     return res.status(403).json({
       error: {
-        msg: 'User is not logged, you need a token!'
+        message: 'User is not logged, you need a token!',
+        code: 403
       }
     });
   }
