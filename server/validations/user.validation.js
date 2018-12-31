@@ -8,6 +8,6 @@ exports.createUser = (req, res, next) => {
       mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required(),
     })
     .options({ allowUnknown: true }); // allow keys not defined
-
-  validator(creatUserRules, req, res, next);
+  const data = req.body;
+  validator(creatUserRules, data, res, next);
 };
