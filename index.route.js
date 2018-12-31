@@ -19,7 +19,7 @@ for (const file of glob.sync( './server/policies/*.js' )) {
 /** Configure the modules server routes */
 logger.info('Initializing Modules Server Routes...');
 for (const file of glob.sync( './server/routes/*.js' )) {
-  router.use('/users', require( path.resolve( file ) ));
+  router.use('/', require( path.resolve( file ) ));
 }
 
 
