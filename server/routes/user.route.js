@@ -1,5 +1,4 @@
 const express = require('express');
-const validate = require('express-validation');
 const paramValidation = require('../validations/user.validation');
 const users = require('../controllers/user.controller');
 const canAccess = require('../../config/auth');
@@ -7,13 +6,13 @@ const policies = require('../helpers/policy-allow');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
-router.route('/users/')
+router.route('/users')
   /** GET /api/users - Get list of users */
   .all(canAccess, policies.isAllowed)
   .get(users.list)
 
   /** POST /api/users - Create new user */
-  .post(validate(paramValidation.createUser), users.create);
+  .post(paramValidation.createUser, users.create);
 
 router.route('users/:userId')
   /** GET /api/users/:userId - Get user */

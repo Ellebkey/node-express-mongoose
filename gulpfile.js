@@ -12,7 +12,10 @@ const allJS = _.union(
   defaultAssets.server.allJS,
   defaultAssets.server.controllers,
   defaultAssets.server.models,
-  defaultAssets.server.routes
+  defaultAssets.server.routes,
+  defaultAssets.server.policies,
+  defaultAssets.server.validations,
+  defaultAssets.server.helpers
 );
 
 gulp.task('nodemon', () => {
