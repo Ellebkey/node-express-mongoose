@@ -6,12 +6,19 @@ const config = require('./config');
 
 // connect to mongo db
 const mongoUri = `mongodb://${config.mongo.user}:${config.mongo.password}@${config.mongo.host}:${config.mongo.port}/${config.mongo.db}`;
+const mongoConfig = {
+  keepAlive: 1,
+  useNewUrlParser: true,
+  useCreateIndex: true
+};
 
-mongoose.connect(mongoUri, { keepAlive: 1, useNewUrlParser: true });
-
-mongoose.connection.on('error', () => {
-  throw new Error(`unable to connect to database: ${mongoUri}`);
-});
+mongoose.connect(mongoUri, mongoConfig)
+  .then(
+  () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
+  err => {
+    throw new Error(`unable to connect to database: ${mongoUri}, ${err}`);
+  }
+);
 
 // print mongoose logs in dev env
 if (config.MONGOOSE_DEBUG) {

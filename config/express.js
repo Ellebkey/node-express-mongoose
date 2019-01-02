@@ -7,7 +7,6 @@ const methodOverride = require('method-override');
 const cors = require('cors');
 const httpStatus = require('http-status');
 const expressWinston = require('express-winston');
-const expressValidation = require('express-validation');
 const helmet = require('helmet');
 const winstonInstance = require('./winston');
 const routes = require('../index.route');
@@ -50,6 +49,7 @@ app.use(cors());
 app.use('/api', routes);
 
 // if error is not an instanceOf APIError, convert it.
+/*
 app.use((err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {
     // validation error contains errors which is an array of error each containing message[]
@@ -63,6 +63,7 @@ app.use((err, req, res, next) => {
   }
   return next(err);
 });
+*/
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
