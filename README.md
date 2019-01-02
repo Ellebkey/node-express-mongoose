@@ -1,15 +1,35 @@
-# Express & mongoose REST API Boilerplate
+# Node, Express & Mongoose REST API Boilerplate in ES6
+
+# [![Express ES6 REST API Starter](https://i.imgur.com/7SPpeOI.png)](https://github.com/Ellebkey/node-express-mongoose)
 
 ## Overview
 
-This is a boilerplate application for building REST APIs in Node.js using ES6 and Express with Code Coverage and JWT Authentication.
+This is a boilerplate application for building REST APIs in Node.js using ES6 and Express with Code Coverage and JWT Authentication. Helps you stay productive by following best practices. Follows [Airbnb's Javascript style guide](https://github.com/airbnb/javascript).
+
+Heavily inspired from [Express & mongoose REST API Boilerplate in ES6 with Code Coverage Awesome](https://github.com/kunalkapadia/express-mongoose-es6-rest-api) with my own improvements.
+
+### Features
+
+| Feature                                | Summary                                                                                                                                                                                                                                                     |
+|----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Authentication via JsonWebToken                  	 	 | Supports authentication using [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken).  |
+| Code Linting               			 | JavaScript code linting is done using [ESLint](http://eslint.org) - a pluggable linter tool for identifying and reporting on patterns in JavaScript. Uses ESLint with [eslint-config-airbnb](https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb), which tries to follow the Airbnb JavaScript style guide.                                                                                                |
+| Auto server restart                  	 | Restart the server using [nodemon](https://github.com/remy/nodemon) in real-time anytime an edit is made,  with Gulp and eslint.                                                                                                                                                                            |
+| ES6 Code Coverage via [istanbul](https://www.npmjs.com/package/istanbul)                  | Supports code coverage of ES6 code using istanbul and mocha. Code coverage reports are saved in `coverage/` directory post `yarn test` execution. Open `coverage/lcov-report/index.html` to view coverage report. `yarn test` also displays code coverage summary on console. Code coverage can also be enforced overall and per file as well, configured via .istanbul.yml                                                                                                                                                                            |
+| API parameter validation via [Joi](https://github.com/hapijs/joi)           | Validate body, params, query, headers and cookies of a request (via middleware) and return a response with errors; if any of the configured validation rules fail. |
+| Secure app via [helmet](https://github.com/helmetjs/helmet)           | Helmet helps secure Express apps by setting various HTTP headers. |
+| Uses [yarn](https://yarnpkg.com) over npm            | Uses new released yarn package manager by facebook. You can read more about it [here](https://code.facebook.com/posts/1840075619545360) |
+
+- CORS support via [cors](https://github.com/expressjs/cors)
+- Uses [http-status](https://www.npmjs.com/package/http-status) to set http status code. It is recommended to use `httpStatus.INTERNAL_SERVER_ERROR` instead of directly using `500` when setting status code.
+- Has `.editorconfig` which helps developers define and maintain consistent coding styles between different editors and IDEs.
 
 ## Getting Started
 
 Clone the repo:
 ```sh
-git clone https://gitlab.com/Ellebkey/express-mongoose.git
-cd express-mongoose
+git clone https://github.com/Ellebkey/node-express-mongoose.git
+cd node-express-mongoose
 ```
 
 Install yarn:
@@ -32,11 +52,9 @@ Start server:
 # Start server
 yarn start
 
-# Selectively set DEBUG env var to get logs
-DEBUG=express-mongoose:* yarn start
+# or user gulp to start via debug and auto reload
+gulp
 ```
-Refer [debug](https://www.npmjs.com/package/debug) to know how to selectively turn on logs.
-
 
 Tests:
 ```sh
@@ -62,15 +80,6 @@ yarn lint
 yarn lint:watch
 ```
 
-Other gulp tasks:
-```sh
-# Wipe out dist and coverage directory
-gulp clean
-
-# Default task: Wipes out dist and coverage directory. Compiles using babel.
-gulp
-```
-
 ##### Deployment
 
 ```sh
@@ -90,25 +99,6 @@ gulp
 In production you need to make sure your server is always up so you should ideally use any of the process manager recommended [here](http://expressjs.com/en/advanced/pm.html).
 We recommend [pm2](http://pm2.keymetrics.io/) as it has several useful features like it can be configured to auto-start your services if system is rebooted.
 
-## Logging
-
-Universal logging library [winston](https://www.npmjs.com/package/winston) is used for logging. It has support for multiple transports.  A transport is essentially a storage device for your logs. Each instance of a winston logger can have multiple transports configured at different levels. For example, one may want error logs to be stored in a persistent remote location (like a database), but all logs output to the console or a local file. We just log to the console for simplicity, you can configure more transports as per your requirement.
-
-#### API logging
-Logs detailed info about each api request to console during development.
-![Detailed API logging](https://cloud.githubusercontent.com/assets/4172932/12563354/f0a4b558-c3cf-11e5-9d8c-66f7ca323eac.JPG)
-
-#### Error logging
-Logs stacktrace of error to console along with other details. You should ideally store all error messages persistently.
-![Error logging](https://cloud.githubusercontent.com/assets/4172932/12563361/fb9ef108-c3cf-11e5-9a58-3c5c4936ae3e.JPG)
-
-## Code Coverage
-Get code coverage summary on executing `yarn test`
-![Code Coverage Text Summary](https://cloud.githubusercontent.com/assets/4172932/12827832/a0531e70-cba7-11e5-9b7c-9e7f833d8f9f.JPG)
-
-`yarn test` also generates HTML code coverage report in `coverage/` directory. Open `lcov-report/index.html` to view it.
-![Code coverage HTML report](https://cloud.githubusercontent.com/assets/4172932/12625331/571a48fe-c559-11e5-8aa0-f9aacfb8c1cb.jpg)
-
 ## Docker
 
 #### Using Docker Compose for Development
@@ -122,16 +112,16 @@ bash bin/development.sh
 # To use this option you need to make sure mongodb is listening on port 27017
 
 # Build docker 
-docker build -t express-mongoose .
+docker build -t express-mongoose-es6-rest-api .
 
 # Run docker
-docker run -p 4040:4040 express-mongoose
+docker run -p 4040:4040 express-mongoose-es6-rest-api
 ```
 
 
 ## A Boilerplate-only Option
 
-If you would prefer not to use any of our tooling, delete the following files from the project: `package.json`, `gulpfile.babel.js`, `.eslintrc` and `.travis.yml`. You can now safely use the boilerplate with an alternative build-system or no build-system at all if you choose.
+If you would prefer not to use any of our tooling, delete the following files from the project: `package.json`, `gulpFile.js`, `.eslintrc` and `.travis.yml`. You can now safely use the boilerplate with an alternative build-system or no build-system at all if you choose.
 
 ## Docs and Recipes
 
@@ -142,6 +132,10 @@ If you would prefer not to use any of our tooling, delete the following files fr
 Contributions, questions and comments are all welcome and encouraged. For code contributions submit a pull request with unit test.
 
 ## License
-This project is licensed under the [MIT License](https://github.com/ellebkey/express-mongoose/blob/master/LICENSE)
+This project is licensed under the [MIT License](https://github.com/Ellebkey/node-express-mongoose/blob/master/LICENSE)
 
+
+## Meta
+
+Joel Barranco – [@Ellebkey](https://twitter.com/ellebkey) – hello@joelbarranco.io
 

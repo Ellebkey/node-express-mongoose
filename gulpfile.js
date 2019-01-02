@@ -6,7 +6,7 @@ const eslint = require('gulp-eslint');
 const defaultAssets = require('./config/assets/default');
 
 const index = 'index.js';
-const run = 'node --inspect=127.0.0.1:9229';
+const debugRun = 'node --inspect=127.0.0.1:9229';
 const allJS = _.union(
   defaultAssets.server.gulpConfig,
   defaultAssets.server.allJS,
@@ -21,13 +21,12 @@ const allJS = _.union(
 gulp.task('nodemon', () => {
   nodemon({
     script: index,
-    exec: run,
+    exec: debugRun,
     watch: allJS
   });
 });
 
-gulp.task('browser-sync', ['nodemon'], () => ({
-}));
+gulp.task('browser-sync', ['nodemon'], () => ({ }));
 
 gulp.task('js', () => {
   gulp.src('server/**/**/*.js')
