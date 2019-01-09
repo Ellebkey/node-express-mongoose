@@ -14,11 +14,12 @@ const mongoConfig = {
 
 mongoose.connect(mongoUri, mongoConfig)
   .then(
-  () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */ },
-  err => {
-    throw new Error(`unable to connect to database: ${mongoUri}, ${err}`);
-  }
-);
+    () => { /** ready to use. The `mongoose.connect()` promise resolves to undefined. */
+    },
+    (err) => {
+      throw new Error(`unable to connect to database: ${mongoUri}, ${err}`);
+    }
+  );
 
 // print mongoose logs in dev env
 if (config.MONGOOSE_DEBUG) {

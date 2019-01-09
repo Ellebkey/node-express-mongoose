@@ -7,9 +7,9 @@ const validate = require('../helpers/validation');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
-router.route('/users/:d')
+router.route('/users')
   /** GET /api/users - Get list of users */
-  // .all(canAccess, policies.isAllowed)
+  .all(canAccess, policies.isAllowed)
   .get(users.list)
 
   /** POST /api/users - Create new user */
