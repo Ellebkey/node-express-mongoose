@@ -13,7 +13,7 @@ controller.getById = async (req, res, next, id) => {
     logger.info(`getting user  ${id}`);
 
     if (!user) {
-      return res.status(400)
+      return res.status(404)
         .send({
           message: `User with id: ${id}, was not found`,
           error: user
@@ -128,7 +128,7 @@ controller.remove = async (req, res, next) => {
     const deletedUser = userDB.remove();
     return res.json(deletedUser);
   } catch (err) {
-    logger.error(`Error in getting users ${err}`);
+    logger.error(`Error trying to deleting user ${err}`);
     return next(err);
   }
 };
