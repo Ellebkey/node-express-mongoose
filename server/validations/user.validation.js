@@ -6,10 +6,7 @@ module.exports = {
     body: Joi.object().keys({
       email: Joi.string().email().required(),
       mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required()
-    }),
-    params: Joi.object().keys({
-      d: Joi.string().guid().required(),
-    }),
+    })
   },
 
   // UPDATE /api/users/:userId
@@ -18,7 +15,7 @@ module.exports = {
       username: Joi.string().required(),
     }),
     params: Joi.object().keys({
-      userId: Joi.string().guid().required(),
+      userId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).required(),
     }),
   }
 };
