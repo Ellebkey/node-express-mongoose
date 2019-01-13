@@ -147,7 +147,7 @@ describe('## User APIs', () => {
         .set('authorization', jwtToken)
         .expect(httpStatus.OK)
         .then((res) => {
-          expect(res.body).to.be.empty; // eslint-disable-line no-unused-expressions
+          expect(res.body.username).to.equal(user.username);
           done();
         })
         .catch(done);

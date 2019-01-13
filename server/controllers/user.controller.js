@@ -125,7 +125,7 @@ controller.list = async (req, res, next) => {
 controller.remove = async (req, res, next) => {
   const { userDB } = req;
   try {
-    const deletedUser = userDB.remove();
+    const deletedUser = await userDB.remove();
     return res.json(deletedUser);
   } catch (err) {
     logger.error(`Error trying to deleting user ${err}`);
