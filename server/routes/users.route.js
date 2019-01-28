@@ -1,22 +1,22 @@
 const express = require('express');
 const paramValidation = require('../validations/user.validation');
 const users = require('../controllers/user.controller');
-const canAccess = require('../helpers/auth');
-const policies = require('../helpers/policy-allow');
-const validate = require('../helpers/validation');
+const canAccess = require('../middlewares/auth');
+const { isAllowed } = require('../middlewares/policy-allow');
+const validate = require('../middlewares/validation');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
-router.route('/users')
+router.route('/')
   /** GET /api/users - Get list of users */
-  .all(canAccess, policies.isAllowed)
+  .all(canAccess, isAllowed)
   .get(users.list)
 
   /** POST /api/users - Create new user */
   .post(validate(paramValidation.createUser), users.create);
 
-router.route('/users/:userId')
-  .all(canAccess, policies.isAllowed)
+router.route('/:userId')
+  .all(canAccess, isAllowed)
   /** GET /api/users/:userId - Get user */
   .get(users.read)
 

@@ -55,7 +55,7 @@ describe('## Misc', () => {
         .get('/api/404')
         .expect(httpStatus.NOT_FOUND)
         .then((res) => {
-          expect(res.body.message).to.equal('Not Found');
+          expect(res.body.error.message).to.equal('API Not found');
           done();
         })
         .catch(done);
@@ -68,7 +68,7 @@ describe('## Misc', () => {
         .get('/api/users/56z787zzz67fc')
         .expect(httpStatus.INTERNAL_SERVER_ERROR)
         .then((res) => {
-          expect(res.body.message).to.equal('An unexpected error occurred');
+          expect(res.body.error.message).to.equal('An unexpected error occurred');
           done();
         })
         .catch(done);

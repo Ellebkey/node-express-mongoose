@@ -1,10 +1,16 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-// const httpStatus = require('http-status');
+const httpStatus = require('http-status');
 const User = require('../models/user.model');
-// const APIError = require('../helpers/APIError');
+const APIError = require('../utils/APIError');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
+
+const apiError = new APIError({
+  message: 'An unexpected error occurred',
+  status: httpStatus.INTERNAL_SERVER_ERROR,
+  stack: undefined,
+});
 
 const controller = {};
 
@@ -15,22 +21,22 @@ const controller = {};
  * @param next
  * @returns {*}
  */
-controller.login = async (req, res) => {
+controller.login = async (req, res, next) => {
   try {
     const user = await User.getByUsername(req.body.username);
 
     if (!user) {
-      return res.status(401).send({
-        message: 'User is not on database'
-      });
+      apiError.message = 'User is not on database';
+      apiError.status = httpStatus.NOT_FOUND;
+      return next(apiError);
     }
 
     const validPassword = await bcrypt.compare(req.body.password, user.hashedPassword);
 
     if (!validPassword) {
-      return res.status(401).send({
-        message: 'Invalid password'
-      });
+      apiError.status = httpStatus.UNAUTHORIZED;
+      apiError.message = 'Invalid password';
+      return next(apiError);
     }
 
     const token = jwt.sign({
@@ -45,18 +51,13 @@ controller.login = async (req, res) => {
     });
   } catch (err) {
     logger.error(err);
-    return res.status(500).send({
-      message: 'An unexpected error occurred'
-    });
+    apiError.error = err;
+    return next(apiError);
   }
 };
 
-//  const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED, true);
-//  return next(err);
-
-controller.signup = async (req, res) => {
+controller.signup = async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-  logger.info(hashedPassword);
   const user = new User(req.body);
   user.hashedPassword = hashedPassword;
 
@@ -74,9 +75,8 @@ controller.signup = async (req, res) => {
     });
   } catch (err) {
     logger.error(`Error in getting user ${err}`);
-    return res.status(500).send({
-      message: `An unexpected error occurred: ${err}`
-    });
+    apiError.error = err;
+    return next(apiError);
   }
 };
 
